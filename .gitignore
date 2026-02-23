@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+.env/
+
+# Dataset (too large)
+dataset/
+
+# Uploaded audio files
+uploads/
+
+# Recorded test audio
+first.wav
+
+# Model files (optional: remove this if you want to upload model)
+models/*.h5
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+requirements.txt
+improvements.txt
+roadmap.txt
