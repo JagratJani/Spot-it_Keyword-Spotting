@@ -11,8 +11,8 @@ class KeywordSpotter:
             
         self.model = load_model(model_path)
         self.labels = ['_background_noise_', 'cat', 'dog', 'house']
-        self.threshold = 0.95  
-        self.min_activations = 1  
+        self.threshold = 0.75  
+        self.min_activations = 3  
 
     def predict_keyword(self, audio_features):
         if audio_features is None:
@@ -49,7 +49,7 @@ class KeywordSpotter:
 
 if __name__ == "__main__":
     try:
-        audio = record_audio(duration=30)
+        audio = record_audio()
         spotter = KeywordSpotter()
         prediction = spotter.analyze_audio(audio)
         print(f"Final Detection: {prediction}")

@@ -8,7 +8,7 @@ from python_speech_features import mfcc
 import soundfile as sf
 
 
-def record_audio(duration=30, sample_rate=16000):
+def record_audio(duration=2, sample_rate=16000):
     print("Recording...")
     audio = sd.rec(int(duration * sample_rate), samplerate=sample_rate, channels=1)
     sd.wait()
