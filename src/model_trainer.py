@@ -6,14 +6,25 @@ from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 from src.audio_processor import load_dataset
 from src.create_model import create_model
 import tensorflow as tf
+import numpy as np
 
 DATASET_PATH = "dataset"
 CLASSES = ['_background_noise_', 'cat', 'dog', 'house']
-MODEL_PATH = "models/kws_final_1.h5"
+MODEL_PATH = "models/kws_final_1.keras"
 
 os.makedirs("models", exist_ok=True)
 print("Loading dataset...")
 X, y = load_dataset(DATASET_PATH, CLASSES)
+mean = X.mean()
+std = X.std()
+
+# Avoid division by zero
+std = std if std > 0 else 1e-6
+
+X = (X - mean) / std
+
+np.save("models/feature_mean.npy", mean)
+np.save("models/feature_std.npy", std)
 X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2, random_state=42)
 
 #  model creatiing and trainnig

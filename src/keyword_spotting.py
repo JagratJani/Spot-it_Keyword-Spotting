@@ -5,11 +5,13 @@ from tensorflow.keras.models import load_model
 
 
 class KeywordSpotter:
-    def __init__(self, model_path='models/kws_final_1.h5'):
+    def __init__(self, model_path='models/kws_final_1.keras'):
         if not os.path.exists(model_path):
             raise FileNotFoundError(f"Model file {model_path} not found. Train first!")
             
-        self.model = load_model(model_path)
+        self.model = load_model(model_path, compile=False)
+        self.mean = np.load("models/feature_mean.npy")
+        self.std = np.load("models/feature_std.npy")
         self.labels = ['_background_noise_', 'cat', 'dog', 'house']
         self.threshold = 0.75  
         self.min_activations = 3  
@@ -17,6 +19,9 @@ class KeywordSpotter:
     def predict_keyword(self, audio_features):
         if audio_features is None:
             return ['silence']
+        
+        # Normalize the audio features using the mean and std from training
+        audio_features = (audio_features - self.mean) / (self.std + 1e-6)
         
         predictions = self.model.predict(audio_features)
         results = []
@@ -31,6 +36,8 @@ class KeywordSpotter:
     
     def analyze_audio(self, audio):
         features = process_audio(audio)
+        if features is not None:
+            features = (features - self.mean) / self.std
         predictions = self.predict_keyword(features)
         
         keyword_counts = {}
